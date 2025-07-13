@@ -1,19 +1,19 @@
 const http = require("http");
-const data = {
-  firstName: "Laurence",
-  lastName: "Benson",
-};
+
+const fs = require("fs");
 
 const site = http.createServer(function (req, res) {
-  console.log("Here I am");
-  console.log(req.headers);
-  console.log(req.url);
+  fs.readFile("test.json", function (error, data) {
+    const holder = JSON.parse(data);
 
-  //   res.setHeader("Content-Type", "text/html");
-  res.setHeader("Content-Type", "application/json");
-  res.write(JSON.stringify(data));
+    console.log(holder);
+    res.setHeader("Content-Type", "application/json");
+    res.write(data);
 
-  res.end();
+    console.log(holder.firstName + " " + holder.lastName);
+
+    res.end();
+  });
 });
 
 site.listen(3000);
