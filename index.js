@@ -18,12 +18,17 @@
 
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get("/", function (req, res) {
   res.send("GET sent");
 });
 
 app.post("/", function (req, res) {
+  console.log(req.body);
   res.send("POST sent");
 });
 
