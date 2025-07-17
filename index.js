@@ -20,7 +20,19 @@ const express = require("express");
 const app = express();
 
 app.get("/", function (req, res) {
-  res.send("Hello World");
+  res.send("GET sent");
+});
+
+app.post("/", function (req, res) {
+  res.send("POST sent");
+});
+
+app.put("/", function (req, res) {
+  res.send("PUT sent");
+});
+
+app.delete("/", function (req, res) {
+  res.send("DELETE sent");
 });
 
 app.listen(3000);
