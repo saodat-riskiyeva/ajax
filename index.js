@@ -19,7 +19,13 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const data = { user: "admin", password: "pass" };
+const data = {
+  users: [
+    { user: "admin", password: "pass", id: 1 },
+    { user: "admin2", password: "pass2", id: 2 },
+    { user: "admin3", password: "pass3", id: 3 },
+  ],
+};
 
 console.log(__dirname);
 
