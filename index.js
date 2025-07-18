@@ -26,6 +26,7 @@ app.get("/users", function (req, res) {
   res.json(data);
 });
 
+app.get("/users/:id", function (req, res) {
   res.send(getRow(req.params.id));
 });
 
