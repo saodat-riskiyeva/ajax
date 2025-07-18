@@ -28,17 +28,19 @@ app.use(bodyParser.json());
 // });
 
 app.get("/", function (req, res) {
-  res.send("GET sent 2");
+  res.send("GET sent");
 });
 
 app.post("/login", function (req, res) {
-  if (data.user == req.body.user && data.password == req.body.password) {
-    res.write("Success");
+  console.log(data.user);
+  console.log(req.body.user);
+
+  if (data.user === req.body.user && data.password === req.body.password) {
+    res.send("TRUE");
   } else {
-    res.write("Failure");
+    res.send("FALSE");
   }
 
-  console.log(req.body.user);
   res.send("POST sent");
 });
 
