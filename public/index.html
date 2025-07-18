@@ -17,14 +17,20 @@
   </head>
   <body>
     <h1>Hello, World!</h1>
-    <input type="text" name="user" placeholder="Username" />
-    <input type="text" name="password" placeholder="Password" />
+    <form id="myForm">
+      <input type="text" name="user" placeholder="Username" />
+      <input type="text" name="password" placeholder="Password" />
+    </form>
     <div class="btn">Click Me</div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
       $(document).ready(function () {
         $(".btn").click(function () {
-          console.log("clicked");
+          const user = $('input[name="user"]').val();
+          const password = $('input[name="password"]').val();
+          $.post("/users", $("#myForm").serialize()).done(function (data) {
+            console.log(data);
+          });
         });
       });
     </script>

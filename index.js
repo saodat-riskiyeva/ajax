@@ -21,9 +21,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const data = {
   users: [
-    { user: "admin", password: "pass", id: 1 },
-    { user: "admin2", password: "pass2", id: 2 },
-    { user: "admin3", password: "pass3", id: 3 },
+    { user: "user", password: "pass", id: 1 },
+    { user: "user2", password: "pass2", id: 2 },
+    { user: "user3", password: "pass3", id: 3 },
   ],
 };
 
@@ -35,6 +35,11 @@ app.use(express.static(__dirname + "/public"));
 
 app.post("/users", function (req, res) {
   //create and add user
+  req.body.id = data.users.length + 1;
+  data.users.push(req.body);
+  console.log(data);
+  console.log(req.body);
+
   res.send("CREATE user by ID");
 });
 
