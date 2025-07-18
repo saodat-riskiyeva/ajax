@@ -3,11 +3,11 @@ const app = express();
 const bodyParser = require("body-parser");
 const data = {
   users: [
-    { user: "user1", password: "pass1", id: 1 },
-    { user: "user2", password: "pass2", id: 2 },
-    { user: "user3", password: "pass3", id: 3 },
-    { user: "user4", password: "pass4", id: 4 },
-    { user: "user5", password: "pass5", id: 5 },
+    { user: "Benito", password: "otineb", id: 1 },
+    { user: "Ashley", password: "yelhsa", id: 2 },
+    { user: "Daniel", password: "leinad", id: 3 },
+    { user: "Martin", password: "nitram", id: 4 },
+    { user: "Ursula", password: "alusru", id: 5 },
   ],
 };
 
