@@ -21,35 +21,36 @@ const app = express();
 const bodyParser = require("body-parser");
 const data = { user: "admin", password: "pass" };
 
+console.log(__dirname);
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-// app.use(function (req, res, next) {
-//   console.log("I am in the middle");
-// });
+app.use(express.static(__dirname + "/public"));
 
-app.get("/", function (req, res) {
-  res.send("GET sent");
+app.post("/users", function (req, res) {
+  //create and add user
+  res.send("CREATE user by ID");
 });
 
-app.post("/login", function (req, res) {
-  console.log(data.user);
-  console.log(req.body.user);
-
-  if (data.user === req.body.user && data.password === req.body.password) {
-    res.send("TRUE");
-  } else {
-    res.send("FALSE");
-  }
-
-  res.send("POST sent");
+app.get("/users", function (req, res) {
+  // get data for all users
+  res.send("GET all users data");
 });
 
-app.put("/", function (req, res) {
-  res.send("PUT sent");
+app.get("/users/:id", function (req, res) {
+  console.log(req.params);
+  // get user data by id
+  res.send("GET user data by ID");
 });
 
-app.delete("/", function (req, res) {
-  res.send("DELETE sent");
+app.put("/users/:id", function (req, res) {
+  // update user data by id
+  res.send("UPDATE user data by ID");
+});
+
+app.delete("/users/:id", function (req, res) {
+  // delete user by id
+  res.send("DELETE user by ID");
 });
 
 app.listen(3000);
