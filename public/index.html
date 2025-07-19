@@ -17,6 +17,7 @@
   </head>
   <body>
     <h1>Hello, World!</h1>
+    <ul id="usersList"></ul>
     <form id="myForm">
       <input type="text" name="user" placeholder="Username" />
       <input type="text" name="password" placeholder="Password" />
@@ -25,6 +26,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
       $(document).ready(function () {
+        $.getJSON("/users", function (data) {
+          $.each(data.users, function (i, value) {
+            const listNew = $(
+              "<li>" +
+                value.user +
+                " " +
+                value.password +
+                " " +
+                value.id +
+                "</li>"
+            );
+            $("#usersList").append(listNew);
+            console.log(value);
+          });
+          console.log(data);
+        });
+
         $(".btn").click(function () {
           const user = $('input[name="user"]').val();
           const password = $('input[name="password"]').val();
