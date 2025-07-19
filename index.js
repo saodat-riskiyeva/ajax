@@ -3,9 +3,11 @@ const app = express();
 const bodyParser = require("body-parser");
 const data = {
   users: [
-    { user: "user", password: "pass", id: 1 },
+    { user: "user1", password: "pass1", id: 1 },
     { user: "user2", password: "pass2", id: 2 },
     { user: "user3", password: "pass3", id: 3 },
+    { user: "user4", password: "pass4", id: 4 },
+    { user: "user5", password: "pass5", id: 5 },
   ],
 };
 
@@ -31,19 +33,34 @@ app.get("/users/:id", function (req, res) {
 });
 
 app.put("/users/:id", function (req, res) {
-  res.send("UPDATE user data by ID");
+  req.body.id = req.params.id;
+  const temp = data.users.indexOf(getRow(req.params.id));
+
+  if (temp != -1) {
+    data.users[temp] = req.body;
+    res.write("UPDATED user by User ID " + (temp + 1));
+  } else {
+    res.write("Not found");
+  }
+  res.send();
 });
 
 app.delete("/users/:id", function (req, res) {
-  res.send("DELETE user by ID");
+  const temp = data.users.indexOf(getRow(req.params.id));
+
+  if (temp != -1) {
+    data.users.splice(temp, 1);
+    res.write("DELETED user by User ID " + (temp + 1));
+  } else {
+    res.write("Not found");
+  }
+  res.send();
 });
 
 app.listen(3000);
 
 function getRow(id) {
   for (let item of data.users) {
-    console.log(typeof item.id);
-    console.log(typeof id);
     if (item.id == Number(id)) {
       return item;
     }
