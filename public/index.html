@@ -49,18 +49,15 @@
     <form id="myForm">
       <input type="text" name="user" placeholder="Username" />
       <input type="text" name="password" placeholder="Password" />
-      <input type="text" name="id" placeholder="id" />
     </form>
     <div class="btn">Create a New User</div>
-    <div class="editBtn">Save</div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
       $(document).ready(function () {
         buildPage();
       });
 
-      // This is DELETE method
-
+      // This is DELETE function
       $("#usersList").on("click", ".remove", function () {
         const id = $(this).parent().data("user").id;
         $.ajax({
@@ -72,30 +69,19 @@
         });
       });
 
-      // This is EditButton method
+      // This is EditButton function
       $("#usersList").on("click", ".edit", function () {
-        const user = $(this).parent().data("user");
+        const data = $(this).parent().find("input").serialize();
+        const id = $(this).parent().find("input[name='id']").val();
 
-        $('input[name="id"]').val(user.id);
-        $('input[name="user"]').val(user.user);
-        $('input[name="password"]').val(user.password);
-
-        $(".editBtn").show();
-      });
-
-      // This is EditButton method
-      $(".editBtn").click(function () {
-        const id = $('input[name="id"]').val();
         $.ajax({
           url: "/users/" + id,
           type: "PUT",
-          data: $("#myForm").serialize(),
+          data: data,
           success: function (rep) {
             buildPage();
           },
         });
-        $(".editBtn").hide();
-        $('input[name="id"]').val("");
       });
 
       $(".btn").click(function () {
@@ -112,16 +98,16 @@
 
         $.getJSON("/users", function (data) {
           $.each(data.users, function (i, value) {
-            const hLink = `<a href="/users/${value.id}" target="_blank"> ${value.user}</a>`;
+            const hLink = `<a href="/users/${value.id}" target="_blank"> View </a>`;
 
-            const listNew = $(
-              "<li>" +
-                hLink +
-                " <button class='remove buttonForDelete'> x </button>" +
-                " <button class='edit buttonForUpdate'> edit </button>" +
-                value.id +
-                " </li>"
-            );
+            let el = `<li><input type="text" name="user" value="${value.user}">`;
+            el += `<input type="text" name="password" value="${value.password}">`;
+            el += `<input type="hidden" name="id" value="${value.id}">`;
+            el += " <button class='remove buttonForDelete'> x </button>";
+            el += " <button class='edit buttonForUpdate'> Save </button>";
+            el += ` <span class='viewLink'> ${hLink} </span> </li>`;
+
+            const listNew = $(el);
 
             listNew.data("user", value);
             $("#usersList").append(listNew);
