@@ -3,11 +3,11 @@ const app = express();
 const bodyParser = require("body-parser");
 const data = {
   users: [
-    { user: "Benito", password: "otineb", id: 1 },
-    { user: "Ashley", password: "yelhsa", id: 2 },
-    { user: "Daniel", password: "leinad", id: 3 },
-    { user: "Martin", password: "nitram", id: 4 },
-    { user: "Ursula", password: "alusru", id: 5 },
+    { user: "Benito", password: "otineb", id: 1753035065982 },
+    { user: "Ashley", password: "yelhsa", id: 1753035214635 },
+    { user: "Daniel", password: "leinad", id: 1753035242900 },
+    { user: "Martin", password: "nitram", id: 1753035303703 },
+    { user: "Ursula", password: "alusru", id: 1753035305016 },
   ],
 };
 
@@ -18,7 +18,7 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 
 app.post("/users", function (req, res) {
-  req.body.id = data.users.length + 1;
+  req.body.id = Math.floor(Date.now());
   data.users.push(req.body);
 
   res.send("CREATE user by ID");

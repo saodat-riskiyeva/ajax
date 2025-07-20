@@ -71,10 +71,6 @@
       $("#usersList").on("click", ".edit", function () {
         const user = $(this).parent().data("user");
 
-        console.log("here");
-        console.log(user);
-        console.log("I am here");
-
         $('input[name="id"]').val(user.id);
         $('input[name="user"]').val(user.user);
         $('input[name="password"]').val(user.password);
@@ -117,7 +113,9 @@
               "<li>" +
                 hLink +
                 " <button class='remove buttonForDelete'> x </button>" +
-                " <button class='edit buttonForUpdate'> edit </button> </li>"
+                " <button class='edit buttonForUpdate'> edit </button>" +
+                value.id +
+                " </li>"
             );
 
             listNew.data("user", value);
