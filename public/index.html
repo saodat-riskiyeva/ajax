@@ -6,12 +6,35 @@
     <title>AJAX with Node Express Server</title>
 
     <style>
-      .btn {
+      .btn,
+      .editBtn {
         border: 1px solid black;
         padding: 5px;
         text-align: center;
         display: inline-block;
+        margin: 10px;
         background-color: aquamarine;
+      }
+      .buttonForDelete {
+        border: 1px solid black;
+        margin: 2px;
+        padding: 2px 10px;
+        text-align: center;
+        display: inline-block;
+        background-color: gainsboro;
+        color: red;
+      }
+      .buttonForUpdate {
+        border: 1px solid black;
+        padding: 2px 20px;
+        margin: 2px;
+        text-align: center;
+        display: inline-block;
+        background-color: gainsboro;
+        color: green;
+      }
+      .editBtn {
+        display: none;
       }
     </style>
   </head>
@@ -21,26 +44,63 @@
     <form id="myForm">
       <input type="text" name="user" placeholder="Username" />
       <input type="text" name="password" placeholder="Password" />
+      <input type="text" name="id" placeholder="id" />
     </form>
-    <div class="btn">Click Me</div>
+    <div class="btn">Create a New User</div>
+    <div class="editBtn">Save</div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
       $(document).ready(function () {
         buildPage();
       });
 
+      // This is DELETE method
+
       $("#usersList").on("click", ".remove", function () {
-        const id = $(this).parent().data("id");
+        const id = $(this).parent().data("user").id;
         $.ajax({
           url: "/users/" + id,
           type: "DELETE",
-          success: function (rep) {},
+          success: function (rep) {
+            buildPage();
+          },
         });
+      });
+
+      // This is EditButton method
+      $("#usersList").on("click", ".edit", function () {
+        const user = $(this).parent().data("user");
+
+        console.log("here");
+        console.log(user);
+        console.log("I am here");
+
+        $('input[name="id"]').val(user.id);
+        $('input[name="user"]').val(user.user);
+        $('input[name="password"]').val(user.password);
+
+        $(".editBtn").show();
+      });
+
+      // This is EditButton method
+      $(".editBtn").click(function () {
+        const id = $('input[name="id"]').val();
+        $.ajax({
+          url: "/users/" + id,
+          type: "PUT",
+          data: $("#myForm").serialize(),
+          success: function (rep) {
+            buildPage();
+          },
+        });
+        $(".editBtn").hide();
+        $('input[name="id"]').val("");
       });
 
       $(".btn").click(function () {
         const user = $('input[name="user"]').val();
         const password = $('input[name="password"]').val();
+
         $.post("/users", $("#myForm").serialize()).done(function (data) {
           buildPage();
         });
@@ -51,19 +111,17 @@
 
         $.getJSON("/users", function (data) {
           $.each(data.users, function (i, value) {
-            const hLink = `<a href="/users/${value.id}" target="_blank"> ${value.id}</a>`;
+            const hLink = `<a href="/users/${value.id}" target="_blank"> ${value.user}</a>`;
 
             const listNew = $(
               "<li>" +
-                value.user +
-                " => " +
                 hLink +
-                " <span class='remove'>x </span> </li>"
+                " <button class='remove buttonForDelete'> x </button>" +
+                " <button class='edit buttonForUpdate'> edit </button> </li>"
             );
 
-            listNew.data("id", value.id);
+            listNew.data("user", value);
             $("#usersList").append(listNew);
-            console.log(value);
           });
         });
       }
