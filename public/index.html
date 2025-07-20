@@ -26,31 +26,47 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
       $(document).ready(function () {
+        buildPage();
+      });
+
+      $("#usersList").on("click", ".remove", function () {
+        const id = $(this).parent().data("id");
+        $.ajax({
+          url: "/users/" + id,
+          type: "DELETE",
+          success: function (rep) {},
+        });
+      });
+
+      $(".btn").click(function () {
+        const user = $('input[name="user"]').val();
+        const password = $('input[name="password"]').val();
+        $.post("/users", $("#myForm").serialize()).done(function (data) {
+          buildPage();
+        });
+      });
+
+      function buildPage() {
+        $("#usersList").html("");
+
         $.getJSON("/users", function (data) {
           $.each(data.users, function (i, value) {
+            const hLink = `<a href="/users/${value.id}" target="_blank"> ${value.id}</a>`;
+
             const listNew = $(
               "<li>" +
                 value.user +
-                " " +
-                value.password +
-                " " +
-                value.id +
-                "</li>"
+                " => " +
+                hLink +
+                " <span class='remove'>x </span> </li>"
             );
+
+            listNew.data("id", value.id);
             $("#usersList").append(listNew);
             console.log(value);
           });
-          console.log(data);
         });
-
-        $(".btn").click(function () {
-          const user = $('input[name="user"]').val();
-          const password = $('input[name="password"]').val();
-          $.post("/users", $("#myForm").serialize()).done(function (data) {
-            console.log(data);
-          });
-        });
-      });
+      }
     </script>
   </body>
 </html>
