@@ -47,8 +47,8 @@
     <h1>Hello, World!</h1>
     <ul id="usersList"></ul>
     <form id="myForm">
-      <input type="text" name="user" placeholder="Username" />
-      <input type="text" name="password" placeholder="Password" />
+      <input type="text" name="name" placeholder="Username" />
+      <input type="text" name="pass" placeholder="Password" />
     </form>
     <div class="btn">Create a New User</div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -85,8 +85,8 @@
       });
 
       $(".btn").click(function () {
-        const user = $('input[name="user"]').val();
-        const password = $('input[name="password"]').val();
+        const user = $('input[name="name"]').val();
+        const pass = $('input[name="pass"]').val();
 
         $.post("/users", $("#myForm").serialize()).done(function (data) {
           buildPage();
@@ -97,11 +97,11 @@
         $("#usersList").html("");
 
         $.getJSON("/users", function (data) {
-          $.each(data.users, function (i, value) {
+          $.each(data, function (i, value) {
             const hLink = `<a href="/users/${value.id}" target="_blank"> View </a>`;
 
-            let el = `<li><input type="text" name="user" value="${value.user}">`;
-            el += `<input type="text" name="password" value="${value.password}">`;
+            let el = `<li><input type="text" name="name" value="${value.name}">`;
+            el += `<input type="text" name="pass" value="${value.pass}">`;
             el += `<input type="hidden" name="id" value="${value.id}">`;
             el += " <button class='remove buttonForDelete'> x </button>";
             el += " <button class='edit buttonForUpdate'> Save </button>";

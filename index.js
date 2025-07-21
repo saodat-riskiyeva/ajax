@@ -1,70 +1,68 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const db = require("./helper/datasim.js");
-const data = db.data;
+
+const sqlite3 = require("sqlite3").verbose();
+const db = new sqlite3.Database("testdb", sqlite3.OPEN_READWRITE, (err) => {
+  if (err) {
+    console.error(err.message);
+  }
+  console.log("Connected to the database.");
+});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 
 app.post("/users", function (req, res) {
-  req.body.id = Math.floor(Date.now());
-  data.users.push(req.body);
-
-  res.send("CREATE user by ID");
+  db.run(
+    'INSERT INTO users (name, pass) VALUES("' +
+      req.body.name +
+      '", "' +
+      req.body.pass +
+      '")',
+    function (err) {
+      console.log(err);
+      res.json({ id: this.lastID });
+    }
+  );
 });
 
 app.get("/users", function (req, res) {
-  res.json(data);
+  db.all("SELECT * FROM users", function (err, rows) {
+    res.json(rows);
+  });
 });
 
 app.get("/users/:id", function (req, res) {
-  res.send(db.getRow(req.params.id));
+  db.all(
+    "SELECT * FROM users WHERE id =" + req.params.id,
+    function (err, rows) {
+      res.json(rows);
+    }
+  );
 });
 
 app.put("/users/:id", function (req, res) {
-  req.body.id = req.params.id;
-
-  const temp = db.findID(data.users, req.params.id);
-
-  if (temp != -1) {
-    data.users[temp] = req.body;
-    res.write("UPDATED user by User ID " + req.params.id);
-  } else {
-    res.write("Not found");
-  }
-  res.send();
+  db.run(
+    'UPDATE users SET name="' +
+      req.body.name +
+      '", pass="' +
+      req.body.pass +
+      '" WHERE id=' +
+      req.params.id,
+    function (err) {
+      console.log(err);
+      res.json({ status: this.changes });
+    }
+  );
 });
 
 app.delete("/users/:id", function (req, res) {
-  const temp = db.findID(data.users, req.params.id);
-
-  if (temp != -1) {
-    data.users.splice(temp, 1);
-    res.write("DELETED user by User ID " + req.params.id);
-  } else {
-    res.write("Not found");
-  }
-  res.send();
+  db.run("DELETE FROM users WHERE id=" + req.params.id, function (err) {
+    console.log(err);
+    res.json({ status: this.changes });
+  });
 });
 
 app.listen(3000);
-
-// const http = require("http");
-// const fs = require("fs");
-
-// const site = http.createServer(function (req, res) {
-//   fs.readFile("test.json", function (error, data) {
-//     const holder = JSON.parse(data);
-
-//     res.setHeader("Content-Type", "application/json");
-//     res.write(data);
-
-//     console.log(holder.firstName + " " + holder.lastName);
-
-//     res.end();
-//   });
-// });
-
-// site.listen(3000);
